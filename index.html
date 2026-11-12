@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سایت ما</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg-main:#cfe8f5;--text-main:#0d2a3a;--text-muted:#3a6a80;--card-bg:rgba(255,255,255,0.65);--card-border:rgba(0,80,140,0.15);--nav-bg:rgba(255,255,255,0.75);--accent1:#00b4ff;--accent2:#0072ff;--shadow-color:rgba(0,150,230,0.45)}
+  body[data-theme="dark"]{--bg-main:#0b1020;--text-main:#e6e9f0;--text-muted:#8b96ab;--card-bg:rgba(255,255,255,0.04);--card-border:rgba(255,255,255,0.08);--nav-bg:rgba(11,16,32,0.65);--accent1:#00b4ff;--accent2:#a020f0}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Vazirmatn',Tahoma,sans-serif;background-color:var(--bg-main);color:var(--text-main);line-height:1.8;overflow-x:hidden;transition:background-color 0.5s}
+  body.game-open{overflow:hidden}
+  nav{position:fixed;top:0;right:0;left:0;padding:14px 6%;display:flex;justify-content:space-between;align-items:center;background:var(--nav-bg);border-bottom:1px solid var(--card-border);z-index:100}
+  nav .logo{font-weight:800;font-size:1.05rem}
+  nav .logo span{color:var(--accent1)}
+  .theme-picker{display:flex;gap:6px}
+  .theme-dot{width:22px;height:22px;border-radius:50%;border:2px solid #888;cursor:pointer}
+  header{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:100px 8% 40px}
+  .avatar{width:130px;height:130px;border-radius:50%;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:2.2rem;font-weight:800;color:#fff;margin-bottom:28px;box-shadow:0 0 40px var(--shadow-color)}
+  header h1{font-size:2rem;font-weight:800;margin-bottom:14px;background:linear-gradient(90deg,var(--accent1),var(--accent2));-webkit-background-clip:text;color:transparent}
+  .sections-wrapper{max-width:1000px;margin:0 auto;padding:0 8% 40px}
+  section h2{font-size:1.5rem;margin-bottom:14px;border-right:5px solid var(--accent1);padding-right:10px}
+  .games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+  .game-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:16px;text-align:center}
+  .game-thumb{font-size:2rem;margin-bottom:10px}
+  .play-btn{padding:8px 20px;border:none;border-radius:30px;background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;font-family:inherit;font-weight:600;cursor:pointer;margin-top:10px}
+  footer{text-align:center;padding:30px;border-top:1px solid var(--card-border);font-size:0.85rem}
+  .game-overlay{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;background:#081a0e}
+  .game-overlay.hidden{display:none}
+  .game-topbar{padding:10px 16px;background:rgba(0,0,0,0.55);color:#fff;display:flex;justify-content:space-between;align-items:center}
+  .game-close-btn{padding:7px 18px;border-radius:20px;background:rgba(255,80,80,0.9);border:none;color:#fff;font-family:inherit;cursor:pointer}
+  .game-content{flex:1;position:relative;overflow:hidden}
+  .game-view{position:absolute;inset:0}
+  .game-view.hidden{display:none!important}
+  #footballGame{background:#1a5a2e}
+  #fbCanvas{width:100%;height:100%}
+  #xoGame{display:flex;align-items:center;justify-content:center;background:#1a1a2e;padding:20px;flex-direction:column;gap:20px}
+  .xo-board{display:grid;grid-template-columns:repeat(3,80px);gap:8px}
+  .xo-cell{height:80px;font-size:2.5rem;background:rgba(255,255,255,0.1);border:1px solid #fff;color:#fff;border-radius:10px}
+  .memory-board{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:min(320px,82vw);margin:auto}
+  .memory-card{aspect-ratio:1;border-radius:10px;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.2);font-size:2rem;cursor:pointer}
+  .memory-card.flipped{background:#fff;color:#000}
+  #memoryGame{display:flex;align-items:center;justify-content:center;background:#2c0e3a;padding:20px;flex-direction:column;gap:10px;color:#fff}
+  #flappyGame{background:#4ec0ca;display:flex;flex-direction:column;align-items:center;justify-content:center;touch-action:none}
+  #flappyCanvas{width:100%;height:100%}
+  #g2048Game{display:flex;flex-direction:column;align-items:center;justify-content:center;background:#faf8ef;padding:14px;gap:10px}
+  .g2048-board{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:min(340px,85vw);aspect-ratio:1;background:#bbada0;padding:6px;border-radius:10px}
+  .g2048-cell{background:rgba(238,228,218,0.35);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.5rem;color:#776e65}
+  .g2048-reset{padding:10px 20px;border-radius:10px;background:#8f7a66;border:none;color:#fff;cursor:pointer;margin-top:10px}
+</style>
+</head>
+<body data-theme="sky">
+<nav>
+  <div class="logo">سایت <span>ما</span></div>
+  <div class="theme-picker">
+    <button class="theme-dot" data-theme="dark" style="background:#0b1020"></button>
+    <button class="theme-dot active" data-theme="sky" style="background:#87CEEB"></button>
+  </div>
+</nav>
+<header>
+  <div class="avatar">MHA</div>
+  <h1>به سایت ما خوش آمدی</h1>
+  <p>اینجا مجموعه‌ای از بازی‌های سرگرم‌کننده است.</p>
+</header>
+<div class="sections-wrapper">
+  <section id="games">
+    <h2>بازی‌ها</h2>
+    <div class="games-grid">
+      <div class="game-card"><div class="game-thumb">⚽</div><h3>فوتبال</h3><button class="play-btn" onclick="openGame('football')">بازی کن</button></div>
+      <div class="game-card"><div class="game-thumb">❌⭕</div><h3>دوز</h3><button class="play-btn" onclick="openGame('xo')">بازی کن</button></div>
+      <div class="game-card"><div class="game-thumb">🧠</div><h3>حافظه</h3><button class="play-btn" onclick="openGame('memory')">بازی کن</button></div>
+      <div class="game-card"><div class="game-thumb">🐦</div><h3>Flappy</h3><button class="play-btn" onclick="openGame('flappy')">بازی کن</button></div>
+      <div class="game-card"><div class="game-thumb">🔢</div><h3>2048</h3><button class="play-btn" onclick="openGame('g2048')">بازی کن</button></div>
+    </div>
+  </section>
+</div>
+<footer>ساخته شده با ❤️</footer>
+
+<div id="gameOverlay" class="game-overlay hidden">
+  <div class="game-topbar">
+    <span id="gameTitle">بازی</span>
+    <button class="game-close-btn" onclick="closeGame()">✕ بستن</button>
+  </div>
+  <div class="game-content">
+    <div id="footballGame" class="game-view hidden"><canvas id="fbCanvas"></canvas></div>
+    <div id="xoGame" class="game-view hidden"><div class="xo-board" id="xoBoard"></div><button class="play-btn" onclick="initXO()">دوباره</button></div>
+    <div id="memoryGame" class="game-view hidden"><div class="memory-board" id="memoryBoard"></div><button class="play-btn" onclick="initMemory()">دوباره</button></div>
+    <div id="flappyGame" class="game-view hidden"><canvas id="flappyCanvas"></canvas></div>
+    <div id="g2048Game" class="game-view hidden"><div class="g2048-board" id="g2048Board"></div><button class="g2048-reset" onclick="init2048()">دوباره</button></div>
+  </div>
+</div>
+
+<script>
+// مدیریت تم
+document.querySelectorAll('.theme-dot').forEach(btn => {
+  btn.onclick = (e) => {
+    document.body.setAttribute('data-theme', e.target.dataset.theme);
+    document.querySelectorAll('.theme-dot').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+  };
+});
+
+let activeGameCleanup = null;
+function openGame(id) {
+  document.body.classList.add('game-open');
+  document.getElementById('gameOverlay').classList.remove('hidden');
+  document.querySelectorAll('.game-view').forEach(v => v.classList.add('hidden'));
+  document.getElementById(id + 'Game').classList.remove('hidden');
+  document.getElementById('gameTitle').innerText = id;
+  
+  if (id === 'xo') initXO();
+  if (id === 'memory') initMemory();
+  if (id === 'football') startFootball();
+  if (id === 'flappy') startFlappy();
+  if (id === 'g2048') init2048();
+}
+function closeGame() {
+  document.body.classList.remove('game-open');
+  document.getElementById('gameOverlay').classList.add('hidden');
+  if(activeGameCleanup) activeGameCleanup();
+}
+
+// --- دوز ---
+let xoState, xoTurn;
+function initXO() {
+  xoState = ['','','','','','','','',''];
+  xoTurn = true;
+  renderXO();
+}
+function renderXO() {
+  const b = document.getElementById('xoBoard'); b.innerHTML = '';
+  xoState.forEach((v,i)=>{
+    let btn = document.createElement('button'); btn.className='xo-cell'; btn.innerText=v;
+    btn.onclick = ()=> playXO(i);
+    b.appendChild(btn);
+  });
+}
+function playXO(i) {
+  if(!xoTurn || xoState[i]) return;
+  xoState[i]='X'; renderXO(); xoTurn=false;
+  setTimeout(()=>{
+    let empty = xoState.map((v,i)=>v===''?i:null).filter(v=>v!==null);
+    if(empty.length) { xoState[empty[Math.floor(Math.random()*empty.length)]]='O'; renderXO(); xoTurn=true; }
+  }, 300);
+}
+
+// --- حافظه ---
+let memDeck, memFlip, memLock;
+function initMemory() {
+  let emojis = ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼'];
+  memDeck = [...emojis, ...emojis].sort(()=>Math.random()-0.5);
+  memFlip = []; memLock = false;
+  renderMem();
+}
+function renderMem() {
+  const b = document.getElementById('memoryBoard'); b.innerHTML='';
+  memDeck.forEach((e,i)=>{
+    let btn = document.createElement('button'); btn.className='memory-card';
+    if(memFlip.includes(i)) { btn.innerText = e; btn.classList.add('flipped'); }
+    btn.onclick = ()=> flipMem(i, e);
+    b.appendChild(btn);
+  });
+}
+function flipMem(i, e) {
+  if(memLock || memFlip.includes(i)) return;
+  memFlip.push(i); renderMem();
+  if(memFlip.length === 2) {
+    memLock = true;
+    if(memDeck[memFlip[0]] === memDeck[memFlip[1]]) { memFlip=[]; memLock=false; renderMem(); }
+    else { setTimeout(()=>{ memFlip=[]; memLock=false; renderMem(); }, 800); }
+  }
+}
+
+// --- 2048 ---
+let g2048Grid;
+function init2048() {
+  g2048Grid = Array(16).fill(0);
+  add2048(); add2048(); render2048();
+}
+function render2048() {
+  const b = document.getElementById('g2048Board'); b.innerHTML='';
+  g2048Grid.forEach(v=>{
+    let d = document.createElement('div'); d.className='g2048-cell';
+    if(v) { d.innerText=v; d.style.background = v===2?'#eee4da':v===4?'#ede0c8':'#f2b179'; }
+    b.appendChild(d);
+  });
+}
+function add2048() {
+  let empty = g2048Grid.map((v,i)=>v===0?i:null).filter(v=>v!==null);
+  if(empty.length) g2048Grid[empty[Math.floor(Math.random()*empty.length)]] = Math.random()<0.9?2:4;
+}
+
+// --- فوتبال و Flappy (نسخه ساده) ---
+function startFootball() {
+  const c = document.getElementById('fbCanvas'); c.width = c.parentElement.clientWidth; c.height = c.parentElement.clientHeight;
+  const ctx = c.getContext('2d'); ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(c.width/2, c.height/2, 20, 0, Math.PI*2); ctx.fill();
+  activeGameCleanup = null;
+}
+function startFlappy() {
+  const c = document.getElementById('flappyCanvas'); c.width = c.parentElement.clientWidth; c.height = c.parentElement.clientHeight;
+  const ctx = c.getContext('2d'); ctx.fillStyle='#f7d51d'; ctx.beginPath(); ctx.arc(c.width/4, c.height/2, 15, 0, Math.PI*2); ctx.fill();
+  activeGameCleanup = null;
+}
+</script>
+</body>
+</html>
